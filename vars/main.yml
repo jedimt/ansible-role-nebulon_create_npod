@@ -1,0 +1,28 @@
+---
+# vars file for create_npod
+# All values are case sensitive, except where noted
+
+# Vault protected credentials
+neb_username: "{{ vault_neb_username }}"
+neb_password: "{{ vault_neb_password }}"
+
+# Specify a name for the nPod to be created
+# npod_name = variable value in 'equipment' _ 'playbook_application'
+# name it "Default nPod" if no value specified
+# `equipment` is defined in the inventory file for localhost
+npod_name: 	"{{ equipment | default('Default_nPod') }}_{{ playbook_application }}"
+
+# Specify the nebulon ON template to use for creating the nPod
+npod_template: "K8s Local"
+
+# Specify the nebulon ON nPod group to build the nPod in. 
+npod_group: Kubernetes
+
+# Time zone for nPod
+timezone: "US/Pacific"
+
+# Note to set for the nPod. NOT case sensitive.
+npod_note: "Created by Ansible playbook"
+
+# Setting this to "present" creates the nPod. NOT case sensitive.
+npod_state: present
