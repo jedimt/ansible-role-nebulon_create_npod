@@ -1,7 +1,6 @@
 ---
 # tasks file for create_npod
 
-
 - name: Get nPod group UUID
   nebulon.nebulon_on.neb_npod_group_info:
     name: "{{ npod_group }}"
@@ -12,26 +11,25 @@
 - name: Get nPod template UUID
   nebulon.nebulon_on.neb_npod_template_info:
     name: "{{ npod_template }}"
-    # include_versions: true
   register: npod_template_name
   tags:
     - npod_template
 
 - name: Set facts
-  set_fact:
-    npod_group_uuid: "{{npod_group_name.npod_groups[0].uuid }}"
+  ansible.builtin.set_fact:
+    npod_group_uuid: "{{ npod_group_name.npod_groups[0].uuid }}"
     npod_template_uuid: "{{ npod_template_name.npod_templates[-1].uuid }}"
   tags:
     - npod_template
 
 - name: Prepare SPU specific info from inventory
-  set_fact:
+  ansible.builtin.set_fact:
     spu_serials: "{{ groups.servers | map('extract', hostvars, 'spu_serial') | list }}"
     spu_ips: "{{ groups.servers | map('extract', hostvars, 'spu_address') | list }}"
   register: result
 
 - name: Prepare create nPod input data
-  set_fact:
+  ansible.builtin.set_fact:
     spus: "{{ spus | default([]) + [dict\
             (spu_serial=item[0],\
             ip_info_config=[dict(address=item[1],\
@@ -50,17 +48,17 @@
 
 - name: Create nPod
   nebulon.nebulon_on.neb_npod:
-    name: "{{npod_name}}"
-    npod_group_uuid: "{{npod_group_uuid}}"
-    spus: "{{spus}}"
-    npod_template_uuid : "{{npod_template_uuid}}"
+    name: "{{ npod_name }}"
+    npod_group_uuid: "{{ npod_group_uuid }}"
+    spus: "{{ spus }}"
+    npod_template_uuid: "{{ npod_template_uuid }}"
     note: "{{ npod_note }}"
     timezone: "{{ timezone }}"
-    ignore_warnings: True
-    state: "{{npod_state}}"
+    ignore_warnings: true
+    state: "{{ npod_state }}"
   register: npod_data
   when: npod_spus.spus[0].serial is defined
 
 - name: Mark if reboot is needed
-  set_fact:
+  ansible.builtin.set_fact:
     reboot_required: "{{ npod_data.changed }}"
