@@ -10,12 +10,12 @@ neb_password: "{{ vault_neb_password }}"
 # npod_name = variable value in 'equipment' _ 'playbook_application'
 # name it "Default nPod" if no value specified
 # `equipment` is defined in the inventory file for localhost
-npod_name: 	"{{ equipment | default('Default_nPod') }}_{{ playbook_application }}"
+npod_name: "{{ equipment | default('Default_nPod') }}_{{ playbook_application }}"
 
 # Specify the nebulon ON template to use for creating the nPod
 npod_template: "K8s Local"
 
-# Specify the nebulon ON nPod group to build the nPod in. 
+# Specify the nebulon ON nPod group to build the nPod in.
 npod_group: Kubernetes
 
 # Time zone for nPod

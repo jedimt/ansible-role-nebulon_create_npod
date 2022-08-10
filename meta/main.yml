@@ -1,5 +1,6 @@
 galaxy_info:
-  author: Aaron Patten
+  author: jedimt
+  role_name: nebulon_create_npod
   description: Create Nebulon nPod
 
   license: MIT
@@ -13,7 +14,7 @@ galaxy_info:
         - xenial
         - jammy
 
-  galaxy_tags: 
+  galaxy_tags:
     - nebulon
     - npod
 

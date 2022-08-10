@@ -1,7 +1,7 @@
 ---
 # defaults file for create_npod
-  bond_mode: BondMode8023ad
-  interfaces: 'enP8p1s0f0np0,enP8p1s0f1np1'
-  netmask_bits: 24
-  bond_transmit_hash_policy: TransmitHashPolicyLayer34
-  bond_lacp_transmit_rate: LACPTransmitRateFast
+bond_mode: BondMode8023ad
+interfaces: 'enP8p1s0f0np0,enP8p1s0f1np1'
+netmask_bits: 24
+bond_transmit_hash_policy: TransmitHashPolicyLayer34
+bond_lacp_transmit_rate: LACPTransmitRateFast
