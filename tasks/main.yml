@@ -22,23 +22,19 @@
   tags:
     - npod_template
 
-- name: Prepare SPU specific info from inventory
+- name: Look up SPU serial and IP information
   ansible.builtin.set_fact:
-    spu_serials: "{{ groups.servers | map('extract', hostvars, 'spu_serial') | list }}"
-    spu_ips: "{{ groups.servers | map('extract', hostvars, 'spu_address') | list }}"
-  register: result
+    spus: "{{ lookup('nebulon.nebulon_on.neb_spu_lookup', 'servers') }}"
 
-- name: Prepare create nPod input data
+- name: Extract SPU serials
   ansible.builtin.set_fact:
-    spus: "{{ spus | default([]) + [dict\
-            (spu_serial=item[0],\
-            ip_info_config=[dict(address=item[1],\
-              bond_mode=bond_mode,\
-              interfaces=interfaces,\
-              netmask_bits=netmask_bits,\
-              bond_transmit_hash_policy=bond_transmit_hash_policy,\
-              bond_lacp_transmit_rate=bond_lacp_transmit_rate)])] }}"
-  loop: "{{ spu_serials | zip(spu_ips) | list }}"
+    spu_serials: "{{ spus | map(attribute='spu_serial') | list }}"
+
+- name: Verify SPUs not part of any existing nPod
+  nebulon.nebulon_on.neb_spu_info:
+    spu_serials: "{{ spu_serials }}"
+    not_in_npod: true
+  register: npod_spus
 
 - name: Verify SPUs not part of any existing nPod
   nebulon.nebulon_on.neb_spu_info:
