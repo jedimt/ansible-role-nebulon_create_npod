@@ -1,8 +1,10 @@
 ---
-# tasks file for create_npod
+# tasks file for ansible-role-nebulon-create-npod
 
 - name: Get nPod group UUID
   nebulon.nebulon_on.neb_npod_group_info:
+    neb_username: "{{ vault_neb_username }}"
+    neb_password: "{{ vault_neb_password }}"
     name: "{{ npod_group }}"
   register: npod_group_name
   tags:
@@ -10,6 +12,8 @@
 
 - name: Get nPod template UUID
   nebulon.nebulon_on.neb_npod_template_info:
+    neb_username: "{{ vault_neb_username }}"
+    neb_password: "{{ vault_neb_password }}"
     name: "{{ npod_template }}"
   register: npod_template_name
   tags:
@@ -32,18 +36,17 @@
 
 - name: Verify SPUs not part of any existing nPod
   nebulon.nebulon_on.neb_spu_info:
+    neb_username: "{{ vault_neb_username }}"
+    neb_password: "{{ vault_neb_password }}"
     spu_serials: "{{ spu_serials }}"
     not_in_npod: true
   register: npod_spus
 
-- name: Verify SPUs not part of any existing nPod
-  nebulon.nebulon_on.neb_spu_info:
-    spu_serials: "{{ spu_serials }}"
-    not_in_npod: true
-  register: npod_spus
-
-- name: Create nPod
+# Disable linting due to warning that cannot be bypassed
+- name: Create nPod # noqa: args[module]
   nebulon.nebulon_on.neb_npod:
+    neb_username: "{{ vault_neb_username }}"
+    neb_password: "{{ vault_neb_password }}"
     name: "{{ npod_name }}"
     npod_group_uuid: "{{ npod_group_uuid }}"
     spus: "{{ spus }}"

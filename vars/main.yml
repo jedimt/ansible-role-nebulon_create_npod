@@ -1,16 +1,12 @@
 ---
-# vars file for create_npod
-# All values are case sensitive, except where noted
+# vars file for ansible-role-nebulon-create-npod
 
 # Vault protected credentials
 neb_username: "{{ vault_neb_username }}"
 neb_password: "{{ vault_neb_password }}"
 
 # Specify a name for the nPod to be created
-# npod_name = variable value in 'equipment' _ 'playbook_application'
-# name it "Default nPod" if no value specified
-# `equipment` is defined in the inventory file for localhost
-npod_name: "{{ equipment | default('Default_nPod') }}_{{ playbook_application }}"
+npod_name: "Default nPod"
 
 # Specify the nebulon ON template to use for creating the nPod
 npod_template: "K8s Local"

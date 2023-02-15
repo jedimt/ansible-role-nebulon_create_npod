@@ -1,5 +1,5 @@
 ---
-# defaults file for create_npod
+# defaults file for ansible-role-nebulon-create-npod
 bond_mode: BondMode8023ad
 netmask_bits: 24
 bond_transmit_hash_policy: TransmitHashPolicyLayer34
