@@ -1,6 +1,14 @@
 ---
 # defaults file for ansible-role-nebulon-create-npod
+
+# Bond mode for the SPU data ports. Default is LACP (BondMode8023ad)
 bond_mode: BondMode8023ad
-netmask_bits: 24
+
+# LACP transmite hash policy. Default TransmitHashPolicyLayer34
 bond_transmit_hash_policy: TransmitHashPolicyLayer34
+
+# LACP transmit rate. Default LACPTransmitRateFast
 bond_lacp_transmit_rate: LACPTransmitRateFast
+
+# Subnet mask to use for SPU data port IP interfaces
+netmask_bits: 24

@@ -1,7 +1,8 @@
 ---
 # vars file for ansible-role-nebulon-create-npod
 
-# Vault protected credentials
+# Vault protected credentials. This assumes an Ansible Vault with the vault_neb_username
+# and vault_neb_password variables are defined and passed to the role.
 neb_username: "{{ vault_neb_username }}"
 neb_password: "{{ vault_neb_password }}"
 
@@ -17,8 +18,8 @@ npod_group: Kubernetes
 # Time zone for nPod
 timezone: "US/Pacific"
 
-# Note to set for the nPod. NOT case sensitive.
+# Note to set for the nPod.
 npod_note: "Created by Ansible playbook"
 
-# Setting this to "present" creates the nPod. NOT case sensitive.
+# Setting this to "present" creates the nPod.
 npod_state: present
