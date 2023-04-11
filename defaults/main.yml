@@ -1,5 +1,28 @@
 ---
-# defaults file for ansible-role-nebulon-create-npod
+# defaults file for jedimt.nebulon_create_npod
+
+# Vault protected credentials. This assumes an Ansible Vault with the vault_neb_username
+# and vault_neb_password variables are defined and passed to the role.
+neb_username: "{{ vault_neb_username }}"
+neb_password: "{{ vault_neb_password }}"
+
+# Specify a name for the nPod to be created
+npod_name: "Default nPod"
+
+# Specify the nebulon ON template to use for creating the nPod
+npod_template: "K8s Local"
+
+# Specify the nebulon ON nPod group to build the nPod in.
+npod_group: Kubernetes
+
+# Time zone for nPod
+timezone: "US/Pacific"
+
+# Note to set for the nPod.
+npod_note: "Created by Ansible playbook"
+
+# Setting this to "present" creates the nPod.
+npod_state: present
 
 # Bond mode for the SPU data ports. Default is LACP (BondMode8023ad)
 bond_mode: BondMode8023ad

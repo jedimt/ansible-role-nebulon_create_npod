@@ -16,8 +16,7 @@ Requirements
 Role Variables
 --------------
 
-There are Nebulon SPU default variables in the defaults/main.yml file. In addition, the following variables
-are used in this role:
+There are Nebulon SPU default variables in the defaults/main.yml file.
 
     # Vault protected credentials. This assumes an Ansible Vault with the vault_neb_username
     # and vault_neb_password variables are defined and passed to the role.
@@ -54,17 +53,17 @@ Example Playbook
     # Create Nebulon nPod
     # ===========================================================================
     - name: Create Nebulon nPod
-    hosts: localhost
-    connection: local
-    gather_facts: false
-    tags: play_create_npod
+      hosts: localhost
+      connection: local
+      gather_facts: false
+      tags: play_create_npod
 
-    vars_files:
+      vars_files:
         # Ansible vault with all required passwords
         - "../../credentials.yml"
 
-    roles:
-        - { role: ansible-role-nebulon-create-npod, npod_name: "K8s_Lenovo" }
+      roles:
+        - { role: jedimt.nebulon_create_npod, npod_name: "K8s_Lenovo" }
 
 License
 -------
