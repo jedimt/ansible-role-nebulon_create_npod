@@ -26,13 +26,39 @@
   tags:
     - npod_template
 
+# Extract the SPU information from the 'servers' inventory group. The spu_serial and
+# spu_address variables are used in creation of a nPod. This expects the inventory
+# to be structured like so:
+# servers:
+#   hosts:
+#     server1-data.demo1.nebulon.com:
+#       spu_serial: 012304495FC92B4919
+#       spu_address: 10.98.254.2,10.98.255.2  # non-lacp configuration
 - name: Look up SPU serial and IP information
   ansible.builtin.set_fact:
     spus: "{{ lookup('nebulon.nebulon_on.neb_spu_lookup', 'servers') }}"
 
+- name: Display 'spus' variable
+  ansible.builtin.debug:
+    var: spus
+    verbosity: 1
+
+# Extract the SPU serial numbers from the 'spus' variable
 - name: Extract SPU serials
   ansible.builtin.set_fact:
-    spu_serials: "{{ spus | map(attribute='spu_serial') | list }}"
+    spu_serials: "{{ spus | map(attribute='spu_serial') | sort | list }}"
+
+- name: Display 'spu_serials' variable
+  ansible.builtin.debug:
+    var: spu_serials
+    verbosity: 1
+
+# "spu_serials": [
+#     "012304495FC92B4919",
+#     "01233A943D23D46EEE",
+#     "0123530D390DC2BBEE",
+#     "01232F645348ACFBEE"
+# ]
 
 - name: Verify SPUs not part of any existing nPod
   nebulon.nebulon_on.neb_spu_info:
@@ -41,6 +67,30 @@
     spu_serials: "{{ spu_serials }}"
     not_in_npod: true
   register: npod_spus
+
+- name: Display 'npod_spus' variable
+  ansible.builtin.debug:
+    var: npod_spus
+    verbosity: 1
+
+- name: Map "available" SPU serials
+  ansible.builtin.set_fact:
+    npod_available_spus: "{{ npod_spus.spus | map(attribute='serial') | sort | list }}"
+
+# Use npod_available_spus and spu_serials together to validate the SPUs in inventory
+# are available for use for creating a nPod. This is needed for supporting multiple
+# nPods per organization.
+- name: Display 'npod_available_spus' variable
+  ansible.builtin.debug:
+    var: npod_available_spus
+    verbosity: 1
+
+# "npod_available_spus": [
+#     "012304495FC92B4919",
+#     "01232F645348ACFBEE",
+#     "01233A943D23D46EEE",
+#     "0123530D390DC2BBEE"
+# ]
 
 # Disable linting due to warning that cannot be bypassed
 - name: Create nPod # noqa: args[module]
@@ -56,7 +106,10 @@
     ignore_warnings: true
     state: "{{ npod_state }}"
   register: npod_data
-  when: npod_spus.spus[0].serial is defined
+  # Only create the nPod when all the SPU serial numbers passed in the inventory
+  # are available. If any of the SPU serials report as part of another nPod or are
+  # not available for any reason, skip creating the nPod.
+  when: "spu_serials == npod_available_spus" # For multiple nPods per org support
 
 - name: Mark if reboot is needed
   ansible.builtin.set_fact:
